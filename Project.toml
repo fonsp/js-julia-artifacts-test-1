@@ -8,5 +8,8 @@ Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 Deno_jll = "04572ae6-984a-583e-9378-9577a1c2574d"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
-[compat]
-julia = "1"
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
