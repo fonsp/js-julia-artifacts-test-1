@@ -24,7 +24,7 @@ jobs:
         deno eval "console.log(1+1)"
     
     - name: Run bundler
-      run: sh bundle_frontend
+      run: sh bundle_frontend.sh
     
     - name: Archive tar
       run: tar -czf frontend-dist.tar.gz frontend-dist
