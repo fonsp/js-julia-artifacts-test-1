@@ -59,7 +59,7 @@ jobs:
       id: release
       uses: actions/github-script@v6
       with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
+        github-token: ${{secrets.PAT_TOKEN}}
         script: |
           let response = await github.rest.repos.createRelease({
             owner: "fonsp",
