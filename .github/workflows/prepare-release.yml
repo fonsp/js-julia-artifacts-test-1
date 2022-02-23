@@ -68,7 +68,7 @@ jobs:
           })
           console.log(create_result)
           
-          let upload_result = await octokit.repos.uploadReleaseAsset({
+          let upload_result = await github.rest.repos.uploadReleaseAsset({
             url: create_result.data.upload_url,
             headers: {
               "content-type": "application/gzip"
