@@ -75,7 +75,7 @@ jobs:
             headers: {
               "content-type": "application/gzip"
             },
-            data: fs.createReadStream(`frontend-dist.tar.gz`),
+            data: fs.readFileSync(`frontend-dist.tar.gz`),
             name: `frontend-dist.tar.gz`,
           });
           console.log(upload_result)
