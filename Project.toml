@@ -1,0 +1,12 @@
+name = "PackageThatUsesJS"
+uuid = "ee696c72-6542-2067-7265-42206c756150"
+authors = ["Fons van der Plas <fons.plas@juliacomputing.com>"]
+version = "1.0.0"
+
+[deps]
+Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
+Deno_jll = "04572ae6-984a-583e-9378-9577a1c2574d"
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+
+[compat]
+julia = "1"
