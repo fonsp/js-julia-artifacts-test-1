@@ -40,6 +40,10 @@ jobs:
     - name: Archive tar
       run: tar -czf frontend-dist.tar.gz frontend-dist
       
+    - name: SHA256 hash
+      id: sha256
+      run: sha256sum frontend-dist.tar.gz
+      
     - uses: actions/upload-artifact@v2
       with:
         path: frontend-dist.tar.gz
