@@ -42,8 +42,11 @@ jobs:
       
     - name: SHA256 hash
       id: sha256
-      run: sha256sum frontend-dist.tar.gz
-      
+      run: |
+        echo "::set-output name=result::$(sha256sum frontend-dist.tar.gz | awk '{ print $1 }')\n"
+    
+    - run: echo ${{ steps.sha256.outputs.result }}
+    
     - uses: actions/upload-artifact@v2
       with:
         path: frontend-dist.tar.gz
