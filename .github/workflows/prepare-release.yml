@@ -9,20 +9,20 @@ on:
 #         default: 'World'
 #         required: true
 
-permissions:
-  actions: write
-  checks: write
-  contents: write
-  deployments: write
-  id-token: write
-  issues: write
-  discussions: write
-  packages: write
-  pages: write
-  pull-requests: write
-  repository-projects: write
-  security-events: write
-  statuses: write
+# permissions:
+#   actions: write
+#   checks: write
+#   contents: write
+#   deployments: write
+#   id-token: write
+#   issues: write
+#   discussions: write
+#   packages: write
+#   pages: write
+#   pull-requests: write
+#   repository-projects: write
+#   security-events: write
+#   statuses: write
 
 jobs:
   greet:
@@ -30,14 +30,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
     - uses: denoland/setup-deno@v1
       with:
         deno-version: v1.x
-    
-    - run: |
-        deno eval "console.log(1+1)"
-    
+
     - name: Run bundler
       run: sh bundle_frontend.sh
     
@@ -46,14 +42,13 @@ jobs:
       
     - uses: actions/upload-artifact@v2
       with:
-        name: dist
         path: frontend-dist.tar.gz
       
-    - name: View context attributes
-      uses: actions/github-script@v6
-      with:
-        script: |
-          console.log(context)
+#     - name: View context attributes
+#       uses: actions/github-script@v6
+#       with:
+#         script: |
+#           console.log(context)
           
     - name: Create release
       id: release
