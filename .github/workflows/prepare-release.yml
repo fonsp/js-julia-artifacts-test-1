@@ -39,3 +39,16 @@ jobs:
       with:
         script: |
           console.log(context)
+          
+    - name: Create release
+      id: release
+      uses: actions/github-script@v6
+      with:
+        script: |
+          let response = await github.rest.repos.createRelease({
+            owner: "fonsp",
+            repo: "js-julia-artifacts-test-2",
+            tag_name: `hello-from-${context.sha}`,
+          })
+          console.log(response)
+          return response
