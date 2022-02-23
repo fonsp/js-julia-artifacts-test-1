@@ -1,19 +1,37 @@
 name: Manual workflow
 on:
-  workflow_dispatch:
-    inputs:
-      name:
-        description: 'Person to greet'
-        default: 'World'
-        required: true
+  push:
+    branches: main
+#   workflow_dispatch:
+#     inputs:
+#       name:
+#         description: 'Person to greet'
+#         default: 'World'
+#         required: true
 
 jobs:
   greet:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Send greeting
-      run: echo "Hello ${{ github.event.inputs.name }}"
+    - uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+    
+    - run: |
+        deno eval "console.log(1+1)"
+    
+    - name: Run bundler
+      run: sh bundle_frontend
+    
+    - name: Archive tar
+      run: tar -czf frontend-dist.tar.gz frontend-dist
+      
+    - uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: frontend-dist.tar.gz
+      
     - name: View context attributes
       uses: actions/github-script@v6
       with:
