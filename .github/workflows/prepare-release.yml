@@ -61,7 +61,7 @@ jobs:
       with:
         github-token: ${{secrets.PAT_TOKEN}}
         script: |
-          import { createReadStream } from 'fs';
+          conts fs = require('fs');
           
           let create_result = await github.rest.repos.createRelease({
             owner: "fonsp",
@@ -75,7 +75,7 @@ jobs:
             headers: {
               "content-type": "application/gzip"
             },
-            data: createReadStream(`frontend-dist.tar.gz`),
+            data: fs.createReadStream(`frontend-dist.tar.gz`),
             name: `frontend-dist.tar.gz`,
           });
           console.log(upload_result)
