@@ -61,6 +61,8 @@ jobs:
       with:
         github-token: ${{secrets.PAT_TOKEN}}
         script: |
+          import { createReadStream } from 'fs';
+          
           let create_result = await github.rest.repos.createRelease({
             owner: "fonsp",
             repo: "js-julia-artifacts-test-2",
@@ -73,7 +75,7 @@ jobs:
             headers: {
               "content-type": "application/gzip"
             },
-            data: fs.createReadStream(`frontend-dist.tar.gz`),
+            data: createReadStream(`frontend-dist.tar.gz`),
             name: `frontend-dist.tar.gz`,
           });
           console.log(upload_result)
