@@ -61,10 +61,19 @@ jobs:
       with:
         github-token: ${{secrets.PAT_TOKEN}}
         script: |
-          let response = await github.rest.repos.createRelease({
+          let create_result = await github.rest.repos.createRelease({
             owner: "fonsp",
             repo: "js-julia-artifacts-test-2",
             tag_name: `hello-from-${context.sha}`,
           })
-          console.log(response)
-          return response
+          console.log(create_result)
+          
+          let upload_result = await octokit.repos.uploadReleaseAsset({
+            url: create_result.data.upload_url,
+            headers: {
+              "content-type": "application/gzip"
+            },
+            data: fs.createReadStream(`frontend-dist.tar.gz`),
+            name: `frontend-dist.tar.gz`,
+          });
+          console.log(upload_result)
