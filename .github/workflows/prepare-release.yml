@@ -61,7 +61,7 @@ jobs:
       with:
         github-token: ${{secrets.PAT_TOKEN}}
         script: |
-          conts fs = require('fs');
+          const fs = require('fs');
           
           let create_result = await github.rest.repos.createRelease({
             owner: "fonsp",
