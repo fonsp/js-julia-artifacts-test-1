@@ -1,1 +1,6 @@
-# this file will be populated by the bundle github action
+[bundle]
+git-tree-sha1 = "707108ae6fd7590a0a4ceb7f314ece38c74d7d36"
+
+    [[bundle.download]]
+    sha256 = "9e1d1c2972cf72a9027a0e17b5cf8f761cbf10c1e3f39cccc416e7aef9d46755"
+    url = "https://github.com/fonsp/js-julia-artifacts-test-2/releases/download/hello-from-5e079bc9dd3a9bb2944db5de81469e3618d60a10/frontend-dist.tar.gz"
