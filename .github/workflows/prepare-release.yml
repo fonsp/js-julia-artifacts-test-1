@@ -133,17 +133,18 @@ jobs:
     - name: 💬 Comment on the bundled commit
       uses: actions/github-script@v6
       env:
-        commit_sha: ${{ steps.push.outputs.commit_sha }}
+        registrator_url: https://juliahub.com/ui/Registrator
         actor: ${{ github.actor }}
+        commit_sha: ${{ steps.push.outputs.commit_sha }}
         repo_url: ${{ github.server_url }}/${{ github.repository }}
         workflow_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       with:
         script: |
-          const { commit_sha, actor, repo_url, workflow_url } = process.env
+          const { commit_sha, actor, repo_url, workflow_url, registrator_url } = process.env
           const { owner, repo } = context.repo
           github.rest.repos.createCommitComment({
             owner,
             repo,
             commit_sha,
-            body: `📦 Your bundle is ready, @${actor}!\n\nTo release this version, go to https://juliahub.com/ui/Registrator, and enter the following details:\n\n| Name | Value |\n|---|---|\n| Package URL | \`${repo_url}\` |\n| Tag/Branch | \`${commit_sha}\` |\n\n## About this bundle\n\nThis bundle (${commit_sha}) was generated from ${context.sha} ([*compare*](${repo_url}/compare/${context.sha}...${commit_sha})). Bundle generation log can be viewed [here](${workflow_url}).`
+            body: `📦 Your bundle is ready, @${actor}!\n\nTo release this version, go to ${registrator_url}, and enter the following details:\n\n| Name | Value |\n|---|---|\n| Package URL | \`${repo_url}\` |\n| Tag/Branch | \`${commit_sha}\` |\n\n## About this bundle\n\nThis bundle (${commit_sha}) was generated from ${context.sha} ([*compare*](${repo_url}/compare/${context.sha}...${commit_sha})). Bundle generation log can be viewed [here](${workflow_url}).`
           })
