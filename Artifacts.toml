@@ -3,4 +3,4 @@ git-tree-sha1 = "bc59d0bd208214c5050077d6462f3a2fc6ff8980"
 
     [[bundle.download]]
     sha256 = "9975d0d76453b70d057a1fdd7e23ece397b65864b0cc5e2ecab2cf346b110306"
-    url = "https://github.com/fonsp/js-julia-artifacts-test-2/releases/download/hello-from-f6e9d6c63071ff5affe978745e1b582e2b0dbbde/frontend-dist.tar.gz"
+    url = "https://github.com/fonsp/js-julia-artifacts-test-2/releases/download/hello-from-a123df8b129b6eea07d4924e43622e374437af54/frontend-dist.tar.gz"
