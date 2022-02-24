@@ -110,6 +110,7 @@ jobs:
         )
         '
 
+    - uses: fregante/setup-git-user@v1
     - name: Push new Artifacts.toml to main
       run: |
           git add Artifacts.toml
