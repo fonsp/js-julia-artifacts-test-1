@@ -81,6 +81,7 @@ jobs:
           });
           
           return upload_result.data.browser_download_url
+        result-encoding: string
 
     - uses: julia-actions/setup-julia@v1
       with:
