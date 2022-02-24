@@ -1,4 +1,4 @@
-name: Manual workflow
+name: Bundle, upload tarball, update Artifacts.toml
 on:
   push:
     branches: main
@@ -9,37 +9,31 @@ on:
 #         default: 'World'
 #         required: true
 
-# permissions:
-#   actions: write
-#   checks: write
-#   contents: write
-#   deployments: write
-#   id-token: write
-#   issues: write
-#   discussions: write
-#   packages: write
-#   pages: write
-#   pull-requests: write
-#   repository-projects: write
-#   security-events: write
-#   statuses: write
-
 jobs:
   greet:
     runs-on: ubuntu-latest
-
-    steps:
-    - run: echo ${{ github.run_id }}
-    
     - uses: actions/checkout@v2
+    
     - uses: denoland/setup-deno@v1
       with:
         deno-version: v1.x
 
-    - name: Run bundler
+    - name: .julia cache
+      uses: actions/cache@v2
+      with:
+        path: ~/.julia
+        key: ${{ runner.os }}-dotjulia-v1-${{ github.run_id }}
+        restore-keys: |
+            ${{ runner.os }}-dotjulia-v1
+
+    - uses: julia-actions/setup-julia@v1
+      with:
+        version: '1.7'
+    
+    - name: 📦 Run bundler
       run: sh bundle_frontend.sh
     
-    - name: Archive tar
+    - name: 📦 Archive tar
       # https://unix.stackexchange.com/questions/346789/compressing-two-identical-folders-give-different-result
       run: tar --mtime='1970-01-01 00:00:00' --sort=name --numeric-owner -czf frontend-dist.tar.gz frontend-dist
       
@@ -60,7 +54,7 @@ jobs:
 #         script: |
 #           console.log(context)
           
-    - name: Create release
+    - name: 🌐 Create release and upload tarball
       id: release
       uses: actions/github-script@v6
       with:
@@ -86,20 +80,19 @@ jobs:
           return upload_result.data.browser_download_url
         result-encoding: string
 
-    - name: .julia cache
-      uses: actions/cache@v2
-      with:
-        path: ~/.julia
-        key: ${{ runner.os }}-dotjulia-v1-${{ github.run_id }}
-        restore-keys: |
-            ${{ runner.os }}-dotjulia-v1
-
-    - uses: julia-actions/setup-julia@v1
-      with:
-        version: '1.7'
+    # Ignore the build changes from previous run.
+    # This "just" hard resets to the latest commit on main.
+    # The previous bundle commit will still exist, but will be "dangling", unless we made a tag for it.
+    # Github will eventually clean dangling commits, which is fine because again, the ones with a tag will stay around.
+    - name: Run git checkout main-bundled
+      run: |
+          git checkout -b main-bundled
+          git reset --hard $GITHUB_SHA
     
     - run: git reset --hard
-    - name: Update Artifacts.toml
+    - uses: fregante/setup-git-user@v1
+    
+    - name: 📝 Update Artifacts.toml
       env:
         download_url: ${{ steps.release.outputs.result }}
       run: |
@@ -121,9 +114,8 @@ jobs:
         )
         '
 
-    - uses: fregante/setup-git-user@v1
-    - name: Push new Artifacts.toml to main
+    - name: 📤 Push new Artifacts.toml to main-bundled
       run: |
-          git add Artifacts.toml
+          git add Artifacts.toml --force
           git commit -m "$GITHUB_WORKFLOW" -m "Built from hash $GITHUB_SHA"
-          git push origin main
+          git push origin main-bundled --force
