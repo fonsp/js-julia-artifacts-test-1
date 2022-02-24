@@ -1,6 +1,6 @@
 # js-julia-artifacts-test-1
 
-This repository contains a folder `frontend/` with unbundled JS files. You can run `bundle_frontend.sh` to bundle it, creating a `frontend-dist/` folder. 
+This Julia package contains a folder `frontend/` with unbundled JS files. You can run `bundle_frontend.sh` to bundle it, creating a `frontend-dist/` folder. 
 
 Because this contains binary outputs, we want to `.gitignore` it. But when releasing a new version of our package, we need the folder, panic!
 
