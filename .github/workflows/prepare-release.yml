@@ -2,12 +2,12 @@ name: Bundle & upload tarball & update Artifacts.toml
 on:
   push:
     branches: main
-#   workflow_dispatch:
-#     inputs:
-#       name:
-#         description: 'Person to greet'
-#         default: 'World'
-#         required: true
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Person to greet'
+        default: 'World'
+        required: true
 
 jobs:
   bundle:
@@ -85,9 +85,9 @@ jobs:
     # This "just" hard resets to the latest commit on main.
     # The previous bundle commit will still exist, but will be "dangling", unless we made a tag for it.
     # Github will eventually clean dangling commits, which is fine because again, the ones with a tag will stay around.
-    - name: Run git checkout main-bundled
+    - name: Run git checkout bundled
       run: |
-          git checkout -b main-bundled
+          git checkout -b bundled
           git reset --hard $GITHUB_SHA
     
     - run: git reset --hard
@@ -115,12 +115,28 @@ jobs:
         )
         '
 
-    - name: 📤 Push new Artifacts.toml to main-bundled
+    - name: 📤 Push new Artifacts.toml to bundled
       id: push
       run: |
           git add Artifacts.toml --force
           git commit -m "$GITHUB_WORKFLOW" -m "Built from hash $GITHUB_SHA"
-          git push origin main-bundled --force
-          echo "::set-output name=commit_sha::$(git rev-parse HEAD))')"
+          git push origin bundled --force
+          echo "::set-output name=commit_sha::$(git rev-parse HEAD)"
 
     - run: echo ${{ steps.push.outputs.commit_sha }}
+    
+    - name: 💬 Comment on the bundled commit
+      uses: actions/github-script@v6
+      env:
+        commit_sha: ${{ steps.push.outputs.commit_sha }}
+        actor: ${{ github.actor }}
+      with:
+        script: |
+          const { commit_sha, actor } = process.env
+          const { owner, repo } = context.repo
+          github.rest.repos.createCommitComment({
+            owner,
+            repo,
+            commit_sha,
+            body: `👋 Thanks for bundling @${actor}!\n\nTo release this version, go to https://juliahub.com/ui/Registrator, and enter the following details:\n\n| Name | Value |\n|---|---|\n| Package URL | \`$https://github.com/${owner}/${repo}\` |\n| Tag/Branch | \`${commit_sha}\` |`
+          })
