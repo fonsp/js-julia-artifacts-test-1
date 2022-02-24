@@ -1,13 +1,13 @@
 name: Bundle & upload tarball & update Artifacts.toml
 on:
-  push:
-    branches: main
+  # push:
+  #   branches: main
   workflow_dispatch:
-    inputs:
-      name:
-        description: 'Person to greet'
-        default: 'World'
-        required: true
+    # inputs:
+    #   name:
+    #     description: 'Person to greet'
+    #     default: 'World'
+    #     required: true
 
 jobs:
   bundle:
