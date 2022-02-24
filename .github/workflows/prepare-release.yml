@@ -140,5 +140,5 @@ jobs:
             owner,
             repo,
             commit_sha,
-            body: `👋 Thanks for bundling @${actor}!\n\nTo release this version, go to https://juliahub.com/ui/Registrator, and enter the following details:\n\n| Name | Value |\n|---|---|\n| Package URL | \`${repo_url}\` |\n| Tag/Branch | \`${commit_sha}\` |\n\n## About this bundle\n\nThis bundle (${commit_sha}) was generated from ${context.sha} ([*compare*](https://github.com/fonsp/js-julia-artifacts-test-1/compare/${context.sha}...${commit_sha})). Bundle generation log can be viewed [here](${workflow_url}).`
+            body: `📦 Your bundle is ready, @${actor}!\n\nTo release this version, go to https://juliahub.com/ui/Registrator, and enter the following details:\n\n| Name | Value |\n|---|---|\n| Package URL | \`${repo_url}\` |\n| Tag/Branch | \`${commit_sha}\` |\n\n## About this bundle\n\nThis bundle (${commit_sha}) was generated from ${context.sha} ([*compare*](https://github.com/fonsp/js-julia-artifacts-test-1/compare/${context.sha}...${commit_sha})). Bundle generation log can be viewed [here](${workflow_url}).`
           })
