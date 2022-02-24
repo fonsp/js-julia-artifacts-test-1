@@ -80,12 +80,7 @@ jobs:
             name: `frontend-dist.tar.gz`,
           });
           
-          let result = {
-            create_result,
-            upload_result,
-          }
-          console.log(result)
-          return result
+          return upload_result.data.browser_download_url
 
     - uses: julia-actions/setup-julia@v1
       with:
@@ -94,24 +89,28 @@ jobs:
     - run: git reset --hard
     - name: Update Artifacts.toml
       env:
-        download_url: ${{ steps.release.outputs.result.upload_result.data.browser_download_url }}
-        big_data: ${{ steps.release.outputs.result }}
+        download_url: ${{ steps.release.outputs.result }}
       run: |
         julia -e '
         import Pkg
         Pkg.add([
           Pkg.PackageSpec(name="ArtifactUtils", version="0.2.1"),
-          Pkg.PackageSpec(name="JSON", version="0.21.3"),
-          Pkg.PackageSpec(name="GitHubActions", version="0.1.4"),
+          # Pkg.PackageSpec(name="JSON", version="0.21.3"),
+          # Pkg.PackageSpec(name="GitHubActions", version="0.1.4"),
         ])
-        using ArtifactUtils, GitHubActions, JSON
-        @show(get(ENV, "download_url", nothing))
-        @show(get(ENV, "big_data", nothing))
-        result = JSON.parse(get(ENV, "big_data", nothing))
-        @show(result)
-        artifact_url = @show(result["upload_result"]["data"]["browser_download_url"])
+        using ArtifactUtils
+        artifact_url = ENV["download_url"]
         
-        
+        add_artifact!(
+            "Artifacts.toml",
+            "bundle",
+            @show(artifact_url),
+            force=true,
+        )
         '
-      
-      
+
+    - name: Push new Artifacts.toml to main
+      run: |
+          git add Artifacts.toml
+          git commit -m "$GITHUB_WORKFLOW" -m "Built from hash $GITHUB_SHA"
+          git push origin main
