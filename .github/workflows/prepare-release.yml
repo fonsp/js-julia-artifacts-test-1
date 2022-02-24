@@ -1,4 +1,4 @@
-name: Bundle, upload tarball, update Artifacts.toml
+name: Bundle & upload tarball & update Artifacts.toml
 on:
   push:
     branches: main
@@ -10,7 +10,7 @@ on:
 #         required: true
 
 jobs:
-  greet:
+  bundle:
     runs-on: ubuntu-latest
     - uses: actions/checkout@v2
     
