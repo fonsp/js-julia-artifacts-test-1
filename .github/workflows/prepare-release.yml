@@ -38,6 +38,7 @@ jobs:
       run: sh bundle_frontend.sh
     
     - name: Archive tar
+      # https://unix.stackexchange.com/questions/346789/compressing-two-identical-folders-give-different-result
       run: tar --mtime='1970-01-01 00:00:00' --sort=name --numeric-owner -czf frontend-dist.tar.gz frontend-dist
       
     - name: SHA256 hash
