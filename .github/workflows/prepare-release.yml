@@ -116,7 +116,11 @@ jobs:
         '
 
     - name: 📤 Push new Artifacts.toml to main-bundled
+      id: push
       run: |
           git add Artifacts.toml --force
           git commit -m "$GITHUB_WORKFLOW" -m "Built from hash $GITHUB_SHA"
           git push origin main-bundled --force
+          echo "::set-output name=commit_sha::$(git rev-parse HEAD))')"
+
+    - run: echo ${{ steps.push.outputs.commit_sha }}
