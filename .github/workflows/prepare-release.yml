@@ -92,7 +92,10 @@ jobs:
         version: '1.7'
     
     - run: git reset --hard
-    - run: |
+    - name: Update Artifacts.toml
+      with:
+        release: ${{ steps.release.outputs.result }}
+      run: |
         julia -e '
         import Pkg
         Pkg.add([
@@ -102,6 +105,5 @@ jobs:
         using ArtifactUtils, GitHubActions
         @show(GitHubActions.get_input("release"; required=true))
         '
-      with:
-        release: ${{ steps.release.outputs.result }}
+      
       
