@@ -63,6 +63,8 @@ jobs:
       with:
         github-token: ${{secrets.PAT_TOKEN}}
         script: |
+          core.getMultilineInput('multilineInputName', { required: true });
+          
           const fs = require('fs');
           
           let create_result = await github.rest.repos.createRelease({
@@ -70,7 +72,6 @@ jobs:
             repo: "js-julia-artifacts-test-2",
             tag_name: `hello-from-${context.sha}`,
           })
-          console.log(create_result)
           
           let upload_result = await github.rest.repos.uploadReleaseAsset({
             url: create_result.data.upload_url,
@@ -80,4 +81,27 @@ jobs:
             data: fs.readFileSync(`frontend-dist.tar.gz`),
             name: `frontend-dist.tar.gz`,
           });
-          console.log(upload_result)
+          
+          let result = {
+            create_result,
+            upload_result,
+          }
+          console.log(result)
+          return result
+
+    - uses: julia-actions/setup-julia@v1
+      with:
+        version: '1.7'
+    
+    - run: git reset --hard
+    - run: |
+        julia -e '
+        import Pkg
+        Pkg.add([
+          Pkg.PackageSpec(name="ArtifactUtils", version="0.2.1"),
+          Pkg.PackageSpec(name="GitHubActions", version="0.1.4"),
+        ])
+        using ArtifactUtils, GitHubActions
+        
+        '
+      
