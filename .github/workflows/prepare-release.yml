@@ -29,6 +29,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - run: echo ${{ env.GITHUB_RUN_ID }}
+    
     - uses: actions/checkout@v2
     - uses: denoland/setup-deno@v1
       with:
@@ -41,16 +43,16 @@ jobs:
       # https://unix.stackexchange.com/questions/346789/compressing-two-identical-folders-give-different-result
       run: tar --mtime='1970-01-01 00:00:00' --sort=name --numeric-owner -czf frontend-dist.tar.gz frontend-dist
       
-    - name: SHA256 hash
-      id: sha256
-      run: |
-        echo "::set-output name=result::$(sha256sum frontend-dist.tar.gz | awk '{ print $1 }')\n"
+    # - name: SHA256 hash
+    #   id: sha256
+    #   run: |
+    #     echo "::set-output name=result::$(sha256sum frontend-dist.tar.gz | awk '{ print $1 }')\n"
     
-    - run: echo ${{ steps.sha256.outputs.result }}
+    # - run: echo ${{ steps.sha256.outputs.result }}
     
-    - uses: actions/upload-artifact@v2
-      with:
-        path: frontend-dist.tar.gz
+    # - uses: actions/upload-artifact@v2
+    #   with:
+    #     path: frontend-dist.tar.gz
       
 #     - name: View context attributes
 #       uses: actions/github-script@v6
@@ -83,6 +85,14 @@ jobs:
           
           return upload_result.data.browser_download_url
         result-encoding: string
+
+    - name: .julia cache
+      uses: actions/cache@v2
+      with:
+        path: ~/.julia
+        key: ${{ runner.os }}-dotjulia-v1-${{ env.GITHUB_RUN_ID }}
+        restore-keys: |
+            ${{ runner.os }}-dotjulia-v1
 
     - uses: julia-actions/setup-julia@v1
       with:
