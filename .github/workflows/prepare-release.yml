@@ -95,6 +95,7 @@ jobs:
     - name: Update Artifacts.toml
       env:
         download_url: ${{ steps.release.outputs.result.upload_result.data.browser_download_url }}
+        big_data: ${{ steps.release.outputs.result }}
       run: |
         julia -e '
         import Pkg
@@ -103,9 +104,8 @@ jobs:
           Pkg.PackageSpec(name="GitHubActions", version="0.1.4"),
         ])
         using ArtifactUtils, GitHubActions
-        @show(ENV)
-        @show(get(ENV, "download_url"))
-        @show(GitHubActions.get_input("release"; required=true))
+        @show(get(ENV, "download_url", nothing))
+        @show(get(ENV, "bog_data", nothing))
         '
       
       
