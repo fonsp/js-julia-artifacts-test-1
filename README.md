@@ -41,9 +41,14 @@ Doing `reset --hard` on the `bundled` branch means that we can use any branch as
 
 This means that old bot-generated commits will be removed, leaving them "dangling" without a branch, and git will eventually garbage-collect them. However! If I release that dangling commit, a git tag will be created (by tagbot), so it will never be removed!
 
+## Why not commit back to the original branch?
 
-# TODO
+Why not commit the Artifacts.toml back to the original branch (i.e. `main`)? Commiting back to `main` would leave the outdated Artifacts.toml file hanging around, even if the `frontend` folder is changed afterwards. With the current strategy, you either have a "development commit", on the `main` branch, which does not have the bundle, or a "release-ready commit", which does.
 
-The Artifacts.toml file can still get out of date. Some ideas:
-- [ ] `.gitignore` the file on `main`, and force push it into the `bundle` branch. This is perfect, unless you want to use additional artifacts.
-- [ ] Store a hash of the original `frontend` folder in the artifact, so that you can verify that the build corresponds to the current state of the folder.
+Well... I'm not sure which is better!
+
+## How to ensure that you always release a bundle?
+
+This is still TODO: on Pluto.jl we run an additional test on the bundle branch, which does not have internet access, to verify that we have offline support.
+
+In this setup, we should test that the artifact exists and that it works.
