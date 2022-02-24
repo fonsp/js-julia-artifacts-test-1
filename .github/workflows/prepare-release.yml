@@ -93,8 +93,8 @@ jobs:
     
     - run: git reset --hard
     - name: Update Artifacts.toml
-      with:
-        release: ${{ steps.release.outputs.result }}
+      env:
+        download_url: ${{ steps.release.outputs.result.upload_result.data.browser_download_url }}
       run: |
         julia -e '
         import Pkg
@@ -103,6 +103,8 @@ jobs:
           Pkg.PackageSpec(name="GitHubActions", version="0.1.4"),
         ])
         using ArtifactUtils, GitHubActions
+        @show(ENV)
+        @show(get(ENV, "download_url"))
         @show(GitHubActions.get_input("release"; required=true))
         '
       
